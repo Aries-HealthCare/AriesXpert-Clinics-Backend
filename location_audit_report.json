@@ -1,0 +1,44 @@
+{
+  "totalPatients": 113,
+  "totalTherapists": 503,
+  "patientsWithMissingCity": 108,
+  "patientsWithMissingState": 13,
+  "patientsWithMissingPincode": 113,
+  "therapistsWithMissingCity": 249,
+  "therapistsWithMissingState": 503,
+  "therapistsWithMissingPincode": 503,
+  "uniquePatientCities": [
+    "mumbai",
+    "delhi"
+  ],
+  "uniquePatientStates": [
+    "uttar pradesh",
+    "maharashtra",
+    "karnataka",
+    "punjab",
+    "gujarat",
+    "delhi",
+    "maharshtra"
+  ],
+  "uniquePatientPincodes": [],
+  "uniqueTherapistCities": [
+    "mumbai",
+    "pune",
+    "delhi",
+    "surat",
+    "ahmedabad",
+    "hyderabad"
+  ],
+  "uniqueTherapistStates": [],
+  "uniqueTherapistPincodes": [],
+  "inconsistentStates": [
+    {
+      "city": "mumbai",
+      "states": [
+        "maharashtra"
+      ]
+    }
+  ],
+  "duplicateCities": {},
+  "orphanPincodes": {}
+}
