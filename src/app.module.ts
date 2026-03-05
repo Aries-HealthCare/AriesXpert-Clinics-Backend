@@ -61,9 +61,11 @@ import { OtpModule } from './modules/otp/otp.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        const uri =
-          configService.get<string>("MONGODB_URI") ||
-          "mongodb://127.0.0.1:27017/AriesXpert";
+        const uri = configService.get<string>("MONGODB_URI");
+        if (!uri) {
+          console.error("❌ MONGODB_URI is missing in environment variables!");
+          throw new Error("MONGODB_URI not provided");
+        }
         return { uri };
       },
       inject: [ConfigService],
@@ -72,7 +74,10 @@ import { OtpModule } from './modules/otp/otp.module';
       connectionName: 'registry',
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        const baseUri = configService.get<string>("MONGODB_URI") || "mongodb://127.0.0.1:27017";
+        const baseUri = configService.get<string>("MONGODB_URI");
+        if (!baseUri) {
+          throw new Error("MONGODB_URI not provided for registry connection");
+        }
         // Connect to the 'clinics' registry database
         let uri = baseUri;
         if (uri.includes('?')) {

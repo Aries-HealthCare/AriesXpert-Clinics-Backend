@@ -21,7 +21,7 @@
     "migrate": "node run-migrations.js"
   },
   "engines": {
-    "node": ">=22.22.0 <23.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",

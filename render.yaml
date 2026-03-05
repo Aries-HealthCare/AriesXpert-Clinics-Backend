@@ -1,11 +1,10 @@
 services:
   - type: web
-    name: ariesxpert-backend
-    env: node
-    runtime: node
+    name: ariesxpert-clinics-backend
+    env: docker
     plan: starter
     autoDeploy: true
-    repo: https://github.com/Aries-HealthCare/ariesxpert-backend
+    repo: https://github.com/Aries-HealthCare/AriesXpert-Clinics-Backend
     branch: main
     buildCommand: npm install && npm run build
     startCommand: npm run start:prod
