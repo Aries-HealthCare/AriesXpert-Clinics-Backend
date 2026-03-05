@@ -66,7 +66,11 @@ import { OtpModule } from './modules/otp/otp.module';
           console.error("❌ MONGODB_URI is missing in environment variables!");
           throw new Error("MONGODB_URI not provided");
         }
-        return { uri };
+        return {
+          uri,
+          serverSelectionTimeoutMS: 5000, // Fail fast if IP not whitelisted
+          connectTimeoutMS: 10000,
+        };
       },
       inject: [ConfigService],
     }),
@@ -87,7 +91,11 @@ import { OtpModule } from './modules/otp/otp.module';
         } else {
           uri = uri.endsWith('/') ? `${uri}clinics` : `${uri}/clinics`;
         }
-        return { uri };
+        return {
+          uri,
+          serverSelectionTimeoutMS: 5000,
+          connectTimeoutMS: 10000,
+        };
       },
       inject: [ConfigService],
     }),
