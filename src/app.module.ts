@@ -82,17 +82,14 @@ import { OtpModule } from './modules/otp/otp.module';
         if (!baseUri) {
           throw new Error("MONGODB_URI not provided for registry connection");
         }
-        // Connect to the 'clinics' registry database
-        let uri = baseUri;
-        if (uri.includes('?')) {
-          const [base, query] = uri.split('?');
-          const lastSlash = base.lastIndexOf('/');
-          uri = `${base.substring(0, lastSlash)}/clinics?${query}`;
-        } else {
-          uri = uri.endsWith('/') ? `${uri}clinics` : `${uri}/clinics`;
-        }
+
+        // Use URL constructor for robust parsing
+        const url = new URL(baseUri);
+        // Set path to /clinics regardless of original path
+        url.pathname = '/clinics';
+
         return {
-          uri,
+          uri: url.toString(),
           serverSelectionTimeoutMS: 5000,
           connectTimeoutMS: 10000,
         };
