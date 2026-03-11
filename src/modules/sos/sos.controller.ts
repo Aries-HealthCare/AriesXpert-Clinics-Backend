@@ -108,6 +108,20 @@ export class SosController {
   }
 
   /**
+   * GET /sos/my
+   * Mobile app: Check active session on startup
+   */
+  @Get('my')
+  async getMyActiveSos(@Request() req: any) {
+    try {
+      const data = await this.sosService.getMyActiveSos(req.user.id);
+      return { success: true, data };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  }
+
+  /**
    * GET /sos/:sessionId/full
    * Admin dashboard: get comprehensive session data (Geo-trail, logs)
    */
