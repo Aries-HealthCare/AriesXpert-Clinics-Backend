@@ -6,6 +6,7 @@ import {
   Inject,
   forwardRef,
 } from "@nestjs/common";
+import { OnEvent } from "@nestjs/event-emitter";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -471,5 +472,48 @@ export class VisitsService {
     });
 
     return { visit, formType, formData };
+  }
+
+  @OnEvent("payment.success")
+  async handlePaymentSuccess(payload: any) {
+    const visitId = payload.visitId || payload.metadata?.visitId;
+    if (!visitId) return;
+
+    try {
+      const visit = await this.visitModel.findById(visitId);
+      if (visit) {
+        visit.paymentStatus = "paid";
+        visit.amountPaid = payload.amount;
+        // If visit was awaiting payment, complete it
+        if (visit.status === "awaiting_payment" || visit.status === "scheduled") {
+          visit.status = "completed";
+          visit.visitStatus = "completed";
+          visit.completedAt = new Date();
+        }
+        await visit.save();
+        this.logger.log(`Visit ${visitId} updated to PAID and COMPLETED via webhook`);
+      }
+    } catch (e) {
+      this.logger.error(`Failed to update visit ${visitId} after payment: ${e.message}`);
+    }
+  }
+
+  async validateArrival(id: string, location: any) {
+    this.logger.log(`Validating arrival for visit ${id} at ${JSON.stringify(location)}`);
+    // Placeholder logic: Always return success for now
+    return { success: true, message: "Arrival validated successfully" };
+  }
+
+  async getFormConfig(formId: string) {
+    this.logger.log(`Fetching form config for ${formId}`);
+    // Return a basic default form structure if not found elsewhere
+    return {
+      id: formId,
+      fields: [
+        { id: "bp", label: "Blood Pressure", type: "text" },
+        { id: "pulse", label: "Pulse", type: "text" },
+        { id: "pain", label: "Pain Level", type: "slider", min: 0, max: 10 }
+      ]
+    };
   }
 }

@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Put,
+  Patch,
   Param,
   Query,
   UseGuards,
@@ -13,7 +14,7 @@ import {
 import { VisitsService } from "./visits.service";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 
-@Controller("visits")
+@Controller(["visits", "appointments", "appointments/visits"])
 export class VisitsController {
   constructor(private readonly visitsService: VisitsService) { }
 
@@ -71,11 +72,13 @@ export class VisitsController {
   }
 
   @Put(":id")
+  @Patch(":id")
   update(@Param("id") id: string, @Body() updateVisitDto: any) {
     return this.visitsService.update(id, updateVisitDto);
   }
 
   @Put(":id/status")
+  @Patch(":id/status")
   updateStatus(
     @Param("id") id: string,
     @Body() { status }: { status: string },
@@ -161,6 +164,7 @@ export class VisitsController {
   }
 
   @Post(":id/complete")
+  @Put(":id/complete")
   @UseGuards(JwtAuthGuard)
   complete(
     @Param("id") id: string,
@@ -179,5 +183,16 @@ export class VisitsController {
   @UseGuards(JwtAuthGuard)
   getAssessmentsByClinic(@Param("clinicId") clinicId: string) {
     return this.visitsService.getAssessmentsByClinic(clinicId);
+  }
+
+  @Post(":id/validate-arrival")
+  @UseGuards(JwtAuthGuard)
+  async validateArrival(@Param("id") id: string, @Body() body: any) {
+    return this.visitsService.validateArrival(id, body.location);
+  }
+
+  @Get("forms/:id")
+  async getFormConfig(@Param("id") id: string) {
+    return this.visitsService.getFormConfig(id);
   }
 }

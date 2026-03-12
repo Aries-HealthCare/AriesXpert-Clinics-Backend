@@ -124,6 +124,9 @@ export class Visit {
   @Prop({ type: Number })
   amountDue: number;
 
+  @Prop({ type: Number })
+  amountPaid: number;
+
   @Prop({ default: false })
   paymentRequired: boolean;
 
