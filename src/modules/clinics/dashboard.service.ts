@@ -112,12 +112,20 @@ export class DashboardService {
             this.connection.collection("patients").countDocuments({ ...matchClinic, isDeleted: { $ne: true } }),
             this.connection.collection("appointments").countDocuments({
                 ...matchClinic,
-                startTime: { $gte: today, $lt: tomorrow }
+                $or: [
+                    { startTime: { $gte: today, $lt: tomorrow } },
+                    { appointmentDate: { $gte: today, $lt: tomorrow } },
+                    { visitDate: { $gte: today, $lt: tomorrow } }
+                ]
             }),
             this.connection.collection("appointments").countDocuments({
                 ...matchClinic,
-                startTime: { $gte: today, $lt: tomorrow },
-                visitType: "home-visit"
+                $or: [
+                    { startTime: { $gte: today, $lt: tomorrow } },
+                    { appointmentDate: { $gte: today, $lt: tomorrow } },
+                    { visitDate: { $gte: today, $lt: tomorrow } }
+                ],
+                visitType: { $in: ["home-visit", "Home Visit", "home"] }
             }),
             this.connection.collection("clinic_users").countDocuments({
                 ...matchClinic,
